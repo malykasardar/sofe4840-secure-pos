@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-5">
+    <div class="text-center mb-4">
+      <h3 style="color: var(--ot-navy); font-weight: 700;">Secure POS</h3>
+      <p class="text-muted">SOFE4840U &nbsp;|&nbsp; Group 5</p>
+    </div>
+    <div class="card">
+      <div class="card-header">Sign In</div>
+      <div class="card-body p-4">
+        <form method="POST" action="/login">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" placeholder="Enter username" required autofocus>
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 py-2">Login</button>
+        </form>
+        <hr class="my-3">
+        <p class="text-center mb-0 text-muted" style="font-size:0.9rem;">No account? <a href="/register">Register here</a></p>
+      </div>
+    </div>
+    <div class="security-notice mt-3">
+      All communications are protected with RSA-2048 encryption and SHA-256 digital signatures.
+    </div>
+  </div>
+</div>
+{% endblock %}

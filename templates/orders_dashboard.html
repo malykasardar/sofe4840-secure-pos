@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Orders Department Dashboard{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>Approved Orders</h2>
+  <p>Both the purchaser and supervisor signatures must be verified before an order can be processed.</p>
+</div>
+
+{% for order in orders %}
+<div class="card mb-3 order-card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>Order <code>{{ order.order_uid[:8] }}...</code></span>
+    <span class="badge-approved">Approved</span>
+  </div>
+  <div class="card-body p-4">
+    <div class="row">
+      <div class="col-md-6">
+        <p class="mb-2"><strong>Vendor:</strong> {{ order.vendor }}</p>
+        <p class="mb-2"><strong>Items:</strong> {{ order.item_description }}</p>
+        <p class="mb-2"><strong>Quantity:</strong> {{ order.quantity }}</p>
+        <p class="mb-2"><strong>Unit Price:</strong> ${{ order.unit_price }}</p>
+        <p class="mb-2"><strong>Total:</strong> ${{ "%.2f"|format(order.quantity|float * order.unit_price|float) }}</p>
+        <p class="mb-2"><strong>Justification:</strong> {{ order.justification }}</p>
+      </div>
+      <div class="col-md-6">
+        <p class="mb-2"><strong>Purchaser:</strong> {{ order.purchaser_name }}</p>
+        <p class="mb-2"><strong>Supervisor:</strong> {{ order.supervisor_name }}</p>
+        <p class="mb-3"><strong>Submitted:</strong> {{ order.created_at[:19].replace('T',' ') }}</p>
+        <div class="p-3 rounded" style="background:#f8f9fa; border: 1px solid #dee2e6;">
+          <p class="mb-2">
+            <strong>Purchaser Signature:</strong>
+            {% if order.purchaser_sig_valid %}
+              <span class="sig-valid">Verified</span>
+            {% else %}
+              <span class="sig-invalid">Invalid</span>
+            {% endif %}
+          </p>
+          <p class="mb-0">
+            <strong>Supervisor Signature:</strong>
+            {% if order.supervisor_sig_valid %}
+              <span class="sig-valid">Verified</span>
+            {% else %}
+              <span class="sig-invalid">Invalid</span>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <form method="POST" action="/order/{{ order.id }}/process" onsubmit="return confirm('Process this order? This action cannot be undone.')">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      {% if order.purchaser_sig_valid and order.supervisor_sig_valid %}
+        <button class="btn btn-process px-4">Process Order</button>
+        <span class="text-muted ms-2" style="font-size:0.85rem;">Both signatures verified. Order is ready to process.</span>
+      {% else %}
+        <button class="btn btn-process px-4" disabled>Process Order</button>
+        <span class="text-danger ms-2" style="font-size:0.85rem;">Cannot process: one or more signatures failed verification.</span>
+      {% endif %}
+    </form>
+  </div>
+</div>
+{% else %}
+<div class="card">
+  <div class="card-body text-center text-muted py-5">
+    <h5>No approved orders</h5>
+    <p>No orders are awaiting processing.</p>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

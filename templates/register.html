@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-6">
+    <div class="text-center mb-4">
+      <h3 style="color: var(--ot-navy); font-weight: 700;">Secure POS</h3>
+      <p class="text-muted">Create your account</p>
+    </div>
+    <div class="card">
+      <div class="card-header">Register</div>
+      <div class="card-body p-4">
+        <form method="POST" action="/register">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" placeholder="3-30 characters, letters/numbers/underscores" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Minimum 8 characters, include a number" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" name="confirm_password" class="form-control" required>
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Role</label>
+            <select name="role" class="form-select" required>
+              <option value="">Select your role...</option>
+              <option value="purchaser">Purchaser</option>
+              <option value="supervisor">Supervisor</option>
+              <option value="orders_dept">Orders Department</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 py-2">Create Account</button>
+        </form>
+        <hr class="my-3">
+        <p class="text-center mb-0 text-muted" style="font-size:0.9rem;">Already have an account? <a href="/login">Sign in</a></p>
+      </div>
+    </div>
+    <div class="security-notice mt-3">
+      Your password is hashed with bcrypt. Your RSA-2048 private key is generated on registration and encrypted before storage — it is never stored in plaintext.
+    </div>
+  </div>
+</div>
+{% endblock %}

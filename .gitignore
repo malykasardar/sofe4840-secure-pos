@@ -1,0 +1,11 @@
+*.db
+__pycache__/
+*.pyc
+.env
+venv/
+*.pem
+*.key
+instance/
+.DS_Store
+.flask_sessions/
+.secret_key

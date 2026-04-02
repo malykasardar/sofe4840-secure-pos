@@ -1,0 +1,6 @@
+flask
+pycryptodome
+bcrypt
+flask-session
+flask-wtf
+flask-limiter
