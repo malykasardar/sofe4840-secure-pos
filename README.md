@@ -42,3 +42,4 @@ Then open http://localhost:5000 in your browser.
 - `malyka/crypto` - Cryptography module
 - `mohammad/routes` - Order workflow routes, audit log
 - `destiny/frontend` - HTML templates, presentation
+# sofe4840-secure-pos
