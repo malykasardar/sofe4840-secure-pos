@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Supervisor Dashboard{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>Pending Orders</h2>
+  <p>Review and verify purchase orders. The purchaser's digital signature is verified before approval is permitted.</p>
+</div>
+
+{% for order in orders %}
+<div class="card mb-3 order-card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>Order <code>{{ order.order_uid[:8] }}...</code></span>
+    <span class="badge-pending">Pending</span>
+  </div>
+  <div class="card-body p-4">
+    <div class="row">
+      <div class="col-md-6">
+        <p class="mb-2"><strong>Vendor:</strong> {{ order.vendor }}</p>
+        <p class="mb-2"><strong>Items:</strong> {{ order.item_description }}</p>
+        <p class="mb-2"><strong>Quantity:</strong> {{ order.quantity }}</p>
+        <p class="mb-2"><strong>Unit Price:</strong> ${{ order.unit_price }}</p>
+        <p class="mb-2"><strong>Total:</strong> ${{ "%.2f"|format(order.quantity|float * order.unit_price|float) }}</p>
+      </div>
+      <div class="col-md-6">
+        <p class="mb-2"><strong>Purchaser:</strong> {{ order.purchaser_name }}</p>
+        <p class="mb-2"><strong>Submitted:</strong> {{ order.created_at[:19].replace('T',' ') }}</p>
+        <p class="mb-2"><strong>Justification:</strong> {{ order.justification }}</p>
+      </div>
+    </div>
+    <hr>
+    <div class="d-flex gap-2 align-items-center">
+      <form method="POST" action="/order/{{ order.id }}/approve" onsubmit="return confirm('Approve this order? Your digital signature will be applied.')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button class="btn btn-approve px-4">Approve</button>
+      </form>
+      <form method="POST" action="/order/{{ order.id }}/reject" onsubmit="return confirm('Reject this order?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button class="btn btn-reject px-4">Reject</button>
+      </form>
+      <span class="text-muted ms-2" style="font-size:0.85rem;">Approving will verify the purchaser signature and apply your co-signature.</span>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="card">
+  <div class="card-body text-center text-muted py-5">
+    <h5>No pending orders</h5>
+    <p>All orders have been reviewed.</p>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}
